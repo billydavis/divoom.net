@@ -1,0 +1,116 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows10.0.26100.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <NuGetAuditMode>direct</NuGetAuditMode>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <UserSecretsId>60631d59-ec72-415d-a208-c3f958ffb8ff</UserSecretsId>
+    <ApplicationManifest>Resources\app.manifest</ApplicationManifest>
+    <ApplicationIcon>Resources\application.ico</ApplicationIcon>
+    <RootNamespace>pcMonitor</RootNamespace>
+    <AssemblyName>Divoom.pcMonitor</AssemblyName>
+    <SupportedOSPlatformVersion>10.0.26100.0</SupportedOSPlatformVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\amd.png" />
+    <None Remove="Resources\app.manifest" />
+    <None Remove="Resources\battery.png" />
+    <None Remove="Resources\chip.png" />
+    <None Remove="Resources\clock.png" />
+    <None Remove="Resources\computer.png" />
+    <None Remove="Resources\control.png" />
+    <None Remove="Resources\cpu.png" />
+    <None Remove="Resources\data.png" />
+    <None Remove="Resources\factor.png" />
+    <None Remove="Resources\fan.png" />
+    <None Remove="Resources\flow.png" />
+    <None Remove="Resources\hdd.png" />
+    <None Remove="Resources\humidity.png" />
+    <None Remove="Resources\intel.png" />
+    <None Remove="Resources\level.png" />
+    <None Remove="Resources\load.png" />
+    <None Remove="Resources\loudspeaker.png" />
+    <None Remove="Resources\mainboard.png" />
+    <None Remove="Resources\nic.png" />
+    <None Remove="Resources\nvidia.png" />
+    <None Remove="Resources\power-supply.png" />
+    <None Remove="Resources\power.png" />
+    <None Remove="Resources\ram.png" />
+    <None Remove="Resources\temperature.png" />
+    <None Remove="Resources\throughput.png" />
+    <None Remove="Resources\time.png" />
+    <None Remove="Resources\voltage.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\application.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\amd.png" />
+    <EmbeddedResource Include="Resources\app.manifest">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\battery.png" />
+    <EmbeddedResource Include="Resources\chip.png" />
+    <EmbeddedResource Include="Resources\clock.png" />
+    <EmbeddedResource Include="Resources\computer.png" />
+    <EmbeddedResource Include="Resources\control.png" />
+    <EmbeddedResource Include="Resources\cpu.png" />
+    <EmbeddedResource Include="Resources\data.png" />
+    <EmbeddedResource Include="Resources\factor.png" />
+    <EmbeddedResource Include="Resources\fan.png" />
+    <EmbeddedResource Include="Resources\flow.png" />
+    <EmbeddedResource Include="Resources\hdd.png" />
+    <EmbeddedResource Include="Resources\humidity.png" />
+    <EmbeddedResource Include="Resources\intel.png" />
+    <EmbeddedResource Include="Resources\level.png" />
+    <EmbeddedResource Include="Resources\load.png" />
+    <EmbeddedResource Include="Resources\loudspeaker.png" />
+    <EmbeddedResource Include="Resources\mainboard.png" />
+    <EmbeddedResource Include="Resources\nic.png" />
+    <EmbeddedResource Include="Resources\nvidia.png" />
+    <EmbeddedResource Include="Resources\power-supply.png" />
+    <EmbeddedResource Include="Resources\power.png" />
+    <EmbeddedResource Include="Resources\ram.png" />
+    <EmbeddedResource Include="Resources\temperature.png" />
+    <EmbeddedResource Include="Resources\throughput.png" />
+    <EmbeddedResource Include="Resources\time.png" />
+    <EmbeddedResource Include="Resources\voltage.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\divoom.net\Divoom.net.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Aga.Controls">
+      <HintPath>libs\Aga.Controls\net472\Aga.Controls.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
