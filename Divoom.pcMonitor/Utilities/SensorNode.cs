@@ -6,37 +6,39 @@ namespace pcMonitor.Utilities;
 
 public class SensorNode : Node
 {
+    private readonly UnitManager _unitManager;
     private Color? _penColor;
     private bool _plot;
 
-    public SensorNode(ISensor sensor)
+    public SensorNode(ISensor sensor, UnitManager unitManager)
     {
         Sensor = sensor;
+        _unitManager = unitManager;
 
         Format = sensor.SensorType switch
         {
             SensorType.Voltage => "{0:F3} V",
             SensorType.Current => "{0:F3} A",
-            SensorType.Clock => "{0:F1} MHz",
-            SensorType.Load => "{0:F1} %",
-            SensorType.Temperature => "{0:F1} °C",
+            SensorType.Clock => _unitManager.ShowDecimal ? "{0:F1} MHz": "{0:F0} MHz",
+            SensorType.Load => _unitManager.ShowDecimal ? "{0:F1} %" : "{0:F0} %",
             SensorType.Fan => "{0:F0} RPM",
-            SensorType.Flow => "{0:F1} L/h",
-            SensorType.Control => "{0:F1} %",
-            SensorType.Level => "{0:F1} %",
-            SensorType.Power => "{0:F1} W",
-            SensorType.Data => "{0:F1} GB",
-            SensorType.SmallData => "{0:F1} MB",
+            SensorType.Flow => _unitManager.ShowDecimal ? "{0:F1} L/h": "{0:F0} L/h",
+            SensorType.Control => _unitManager.ShowDecimal ? "{0:F1} %" : "{0:F0} %",
+            SensorType.Level => _unitManager.ShowDecimal ? "{0:F1} %": "{0:F0} %",
+            SensorType.Power => _unitManager.ShowDecimal ? "{0:F1} W" : "{0:F0} W",
+            SensorType.Data => _unitManager.ShowDecimal ? "{0:F1} GB" : "{0:F0} GB",
+            SensorType.SmallData => _unitManager.ShowDecimal ? "{0:F1} MB" : "{0:F0} MB",
             SensorType.Factor => "{0:F3}",
-            SensorType.Frequency => "{0:F1} Hz",
-            SensorType.Throughput => "{0:F1} B/s",
+            SensorType.Frequency => _unitManager.ShowDecimal ? "{0:F1} Hz" : "{0:F0} Hz",
+            SensorType.Throughput => _unitManager.ShowDecimal ? "{0:F1} B/s" : "{0:F0} B/s",
             SensorType.TimeSpan => "{0:g}",
             SensorType.Energy => "{0:F0} mWh",
             SensorType.Noise => "{0:F0} dBA",
-            SensorType.Conductivity => "{0:F1} µS/cm",
+            SensorType.Conductivity => _unitManager.ShowDecimal ? "{0:F1} µS/cm" : "{0:F0} µS/cm",
             SensorType.Humidity => "{0:F0} %",
             _ => Format
         };
+        
 
         //bool hidden = settings.GetValue(new Identifier(sensor.Identifier, "hidden").ToString(), sensor.IsDefaultHidden);
         //base.IsVisible = !hidden;
@@ -134,15 +136,15 @@ public class SensorNode : Node
         {
             switch (Sensor.SensorType)
             {
-                // case SensorType.Temperature when _unitManager.TemperatureUnit == TemperatureUnit.Fahrenheit:
-                //     {
-                //         return $"{value * 1.8 + 32:F1} °F";
-                //     }
-                // TODO add user option to select temperature unit
-                // case SensorType.Temperature:
-                // {
-                //     return $"{value * 1.8 + 32:F1} °F";
-                // }
+                case SensorType.Temperature:
+                {
+                    if (_unitManager.TemperatureUnit == TemperatureUnit.Celsius)
+                        return  _unitManager.ShowDecimal ?  $"{value:F1} °C" : $"{value:F0} °C"; 
+
+                    var f = UnitManager.CelsiusToFahrenheit(value);
+                        return _unitManager.ShowDecimal ? $"{f:F1} °F" : $"{f:F0} °F";
+                        
+                    }
                 case SensorType.Throughput:
                 {
                     string result;

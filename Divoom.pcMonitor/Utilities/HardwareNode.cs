@@ -4,12 +4,14 @@ namespace pcMonitor.Utilities;
 
 public class HardwareNode : Node
 {
+    private readonly UnitManager _unitManager;
     private readonly List<TypeNode> _typeNodes = new List<TypeNode>();
 
     public IHardware Hardware { get; }
 
-    public HardwareNode(IHardware hardware)
+    public HardwareNode(IHardware hardware, UnitManager unitManager)
     {
+        _unitManager = unitManager;
         Hardware = hardware;
         Image = HardwareTypeImage.Instance.GetImage(hardware.HardwareType);
 
@@ -37,7 +39,7 @@ public class HardwareNode : Node
         while (i < node.Nodes.Count && ((SensorNode)node.Nodes[i]).Sensor.Index < sensor.Index)
             i++;
         
-        SensorNode sensorNode = new SensorNode(sensor);
+        SensorNode sensorNode = new SensorNode(sensor, _unitManager);
         // sensorNode.PlotSelectionChanged += SensorPlotSelectionChanged;
         node.Nodes.Insert(i, sensorNode);
     }
@@ -59,7 +61,7 @@ public class HardwareNode : Node
             if (!sensor.Name.Equals(searchText)) continue;
 
             // Console.WriteLine($@"{Text} - FindSensorNode: {sensor.Name} - FOUND");
-            return new SensorNode(sensor);
+            return new SensorNode(sensor, _unitManager);
         }
 
         // Console.WriteLine($@"{Text} - FindSensorNode: {searchText} - Not Found");

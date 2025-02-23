@@ -14,6 +14,7 @@ namespace pcMonitor
     {
         private readonly Computer _computer;
         private readonly UpdateVisitor _updateVisitor;
+        private readonly UnitManager _unitManager;
         private readonly Node _root;
         private Device? _selectedDevice;
         private int? _selectedScreen;
@@ -24,6 +25,8 @@ namespace pcMonitor
         public MainForm()
         {
             _divoomPcMonitorUpdateCommand = new DivoomPcMonitorUpdate();
+
+            _unitManager = new UnitManager();
 
             _computer = new Computer
             {
@@ -43,7 +46,7 @@ namespace pcMonitor
             _updateVisitor = new UpdateVisitor();
             InitializeComponent();
 
-            
+
             deviceContainer.Panel2Collapsed = true;
             SeedScreenList();
             RefreshDevices(this, EventArgs.Empty);
@@ -130,8 +133,11 @@ namespace pcMonitor
                 {
                     _selectedDevice = new Device(deviceInfo);
                     deviceContainer.Panel2Collapsed = deviceInfo.Hardware != 400;
+                    _unitManager.ShowDecimal = true;
                     if (deviceInfo.Hardware != 400)
                     {
+                        // The Pixxo64 doesn't show decimals.
+                        _unitManager.ShowDecimal = false;
                         Application.DoEvents();
                         await _selectedDevice!.SetSubDial(625, 0);
                     }
@@ -155,7 +161,7 @@ namespace pcMonitor
                     await _selectedDevice!.SetSubDial(625, _selectedScreen.Value);
                 }
             }
-            catch 
+            catch
             {
                 // Do Nothing
             }
@@ -297,7 +303,7 @@ namespace pcMonitor
             //if (hardware.Sensors.Length == 0 && hardware.SubHardware.Length == 0)
             //    return;
 
-            var hardwareNode = new HardwareNode(hardware);
+            var hardwareNode = new HardwareNode(hardware, _unitManager);
             InsertSorted(node.Nodes, hardwareNode);
 
 
@@ -397,6 +403,19 @@ namespace pcMonitor
                     break;
             }
 
+        }
+
+        private void OnUpdateUnitClick(object sender, EventArgs e)
+        {
+            var item = (ToolStripMenuItem)sender;
+
+            foreach (ToolStripMenuItem menuItem in temperatureUnitToolStripMenuItem.DropDownItems)
+                menuItem.Checked = false;
+
+            item.Checked = true;
+            var text = item.Text;
+            _unitManager.TemperatureUnit = text != null && text.Contains("Celsius", StringComparison.CurrentCultureIgnoreCase) 
+                ? TemperatureUnit.Celsius : TemperatureUnit.Fahrenheit;
         }
     }
 }
