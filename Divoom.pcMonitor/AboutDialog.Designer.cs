@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutDialog));
             pictureBox1 = new PictureBox();
             label1 = new Label();
             versionLabel = new Label();
@@ -37,7 +38,8 @@
             // 
             // pictureBox1
             // 
-            pictureBox1.Image = Properties.Resources.application;
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.InitialImage = (Image)resources.GetObject("pictureBox1.InitialImage");
             pictureBox1.Location = new Point(12, 7);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(77, 81);

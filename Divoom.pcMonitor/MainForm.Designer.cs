@@ -237,7 +237,7 @@
             // 
             temperatureUnitToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { celciusToolStripMenuItem, farenheightToolStripMenuItem });
             temperatureUnitToolStripMenuItem.Name = "temperatureUnitToolStripMenuItem";
-            temperatureUnitToolStripMenuItem.Size = new Size(180, 22);
+            temperatureUnitToolStripMenuItem.Size = new Size(166, 22);
             temperatureUnitToolStripMenuItem.Text = "Temperature Unit";
             temperatureUnitToolStripMenuItem.Click += OnUpdateUnitClick;
             // 
@@ -246,14 +246,14 @@
             celciusToolStripMenuItem.Checked = true;
             celciusToolStripMenuItem.CheckState = CheckState.Checked;
             celciusToolStripMenuItem.Name = "celciusToolStripMenuItem";
-            celciusToolStripMenuItem.Size = new Size(180, 22);
+            celciusToolStripMenuItem.Size = new Size(130, 22);
             celciusToolStripMenuItem.Text = "Celsius";
             celciusToolStripMenuItem.Click += OnUpdateUnitClick;
             // 
             // farenheightToolStripMenuItem
             // 
             farenheightToolStripMenuItem.Name = "farenheightToolStripMenuItem";
-            farenheightToolStripMenuItem.Size = new Size(180, 22);
+            farenheightToolStripMenuItem.Size = new Size(130, 22);
             farenheightToolStripMenuItem.Text = "Fahrenheit";
             farenheightToolStripMenuItem.Click += OnUpdateUnitClick;
             // 
@@ -261,7 +261,7 @@
             // 
             updateIntervalToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { msToolStripMenuItem, msToolStripMenuItem1, sToolStripMenuItem, sToolStripMenuItem1, sToolStripMenuItem2, sToolStripMenuItem3 });
             updateIntervalToolStripMenuItem.Name = "updateIntervalToolStripMenuItem";
-            updateIntervalToolStripMenuItem.Size = new Size(180, 22);
+            updateIntervalToolStripMenuItem.Size = new Size(166, 22);
             updateIntervalToolStripMenuItem.Text = "Update Interval";
             // 
             // msToolStripMenuItem
@@ -633,7 +633,9 @@
             MainMenuStrip = menuStrip1;
             Name = "MainForm";
             Text = "Divoom PC Monitor";
+            FormClosing += OnFormClosing;
             FormClosed += MainForm_FormClosed;
+            Resize += OnResize;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             splitContainer1.Panel1.ResumeLayout(false);

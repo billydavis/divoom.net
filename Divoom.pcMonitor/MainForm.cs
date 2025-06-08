@@ -19,6 +19,7 @@ namespace pcMonitor
         private Device? _selectedDevice;
         private int? _selectedScreen;
         private bool _isMonitoring;
+        private NotifyIcon? _trayIcon;
 
         private readonly DivoomPcMonitorUpdate _divoomPcMonitorUpdateCommand;
 
@@ -46,7 +47,8 @@ namespace pcMonitor
             _updateVisitor = new UpdateVisitor();
             InitializeComponent();
 
-
+            InitializeTrayIcon();
+            
             deviceContainer.Panel2Collapsed = true;
             SeedScreenList();
             RefreshDevices(this, EventArgs.Empty);
@@ -72,6 +74,24 @@ namespace pcMonitor
             treeView.Model = treeModel;
 
             backgroundUpdater.DoWork += BackgroundUpdater_DoWork;
+        }
+
+        private void InitializeTrayIcon()
+        {
+            _trayIcon = new NotifyIcon
+            {
+                Icon = this.Icon,
+                Text = "PC Monitor",
+                Visible = true
+            };
+            _trayIcon.DoubleClick += TrayIcon_DoubleClick;
+        }
+
+        private void TrayIcon_DoubleClick(object? sender, EventArgs e)
+        {
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
+            this.BringToFront();
         }
 
         private async void RefreshDevices(object sender, EventArgs e)
@@ -414,8 +434,22 @@ namespace pcMonitor
 
             item.Checked = true;
             var text = item.Text;
-            _unitManager.TemperatureUnit = text != null && text.Contains("Celsius", StringComparison.CurrentCultureIgnoreCase) 
+            _unitManager.TemperatureUnit = text != null && text.Contains("Celsius", StringComparison.CurrentCultureIgnoreCase)
                 ? TemperatureUnit.Celsius : TemperatureUnit.Fahrenheit;
+        }
+
+        private void OnResize(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Minimized)
+            {
+                this.Hide();
+                _trayIcon!.Visible = true;
+            }
+        }
+
+        private void OnFormClosing(object sender, FormClosingEventArgs e)
+        {
+            _trayIcon?.Dispose();
         }
     }
 }
