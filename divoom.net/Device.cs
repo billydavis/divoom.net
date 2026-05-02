@@ -65,6 +65,51 @@ public class Device()
         return CheckCommandResult(result);
     }
 
+    public async Task<bool> SendImageAsync(int width, byte[] rgbData, int lcdIndex = -1)
+    {
+        // Reset the device's GIF frame counter before each new image so it
+        // doesn't wait for more frames from the previous send.
+        var resetData = JsonSerializer.Serialize(new { Command = "Draw/ResetHttpGifId" });
+        await SendCommand<CommandResult>(resetData);
+
+        var picId = Random.Shared.Next(1, 1000);
+
+        string data;
+        if (lcdIndex >= 0)
+        {
+            // Times Gate: LcdArray is a 5-element array; set a 1 at the target panel index.
+            var lcdArray = new int[5];
+            lcdArray[Math.Clamp(lcdIndex, 0, 4)] = 1;
+            data = JsonSerializer.Serialize(new
+            {
+                Command   = "Draw/SendHttpGif",
+                LcdArray  = lcdArray,
+                PicNum    = 1,
+                PicWidth  = width,
+                PicOffset = 0,
+                PicID     = picId,
+                PicSpeed  = 1000,
+                PicData   = Convert.ToBase64String(rgbData)
+            });
+        }
+        else
+        {
+            data = JsonSerializer.Serialize(new
+            {
+                Command   = "Draw/SendHttpGif",
+                PicNum    = 1,
+                PicWidth  = width,
+                PicOffset = 0,
+                PicID     = picId,
+                PicSpeed  = 1000,
+                PicData   = Convert.ToBase64String(rgbData)
+            });
+        }
+
+        var result = await SendCommand<CommandResult>(data);
+        return CheckCommandResult(result);
+    }
+
     public async Task<T?> SendCommand<T>(string data)
     {
         var response = await WebApi.Post(_url, data);
