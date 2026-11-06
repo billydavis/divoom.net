@@ -36,7 +36,7 @@ public class TreeModel : ITreeModel
             while (node != root)
             {
                 stack.Push(node);
-                node = node.Parent;
+                node = node.Parent ?? throw new InvalidOperationException("Node is not attached to this tree.");
             }
             return new TreePath(stack.ToArray());
         }
@@ -47,12 +47,12 @@ public class TreeModel : ITreeModel
         get { return root.Nodes; }
     }
 
-    private Node GetNode(TreePath treePath)
+    private Node? GetNode(TreePath treePath)
     {
         Node parent = root;
         foreach (object obj in treePath.FullPath)
         {
-            Node node = obj as Node;
+            Node? node = obj as Node;
             if (node == null || node.Parent != parent)
                 return null;
             parent = node;
@@ -62,7 +62,7 @@ public class TreeModel : ITreeModel
 
     public IEnumerable GetChildren(TreePath treePath)
     {
-        Node node = GetNode(treePath);
+        Node? node = GetNode(treePath);
         if (node != null)
         {
             foreach (Node n in node.Nodes)
@@ -97,10 +97,10 @@ public class TreeModel : ITreeModel
     }
 
 #pragma warning disable 67
-    public event EventHandler<TreeModelEventArgs> NodesChanged;
-    public event EventHandler<TreePathEventArgs> StructureChanged;
-    public event EventHandler<TreeModelEventArgs> NodesInserted;
-    public event EventHandler<TreeModelEventArgs> NodesRemoved;
+    public event EventHandler<TreeModelEventArgs>? NodesChanged;
+    public event EventHandler<TreePathEventArgs>? StructureChanged;
+    public event EventHandler<TreeModelEventArgs>? NodesInserted;
+    public event EventHandler<TreeModelEventArgs>? NodesRemoved;
 #pragma warning restore 67
 
     public void OnNodeChanged(Node parent, int index, Node node)

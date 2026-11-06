@@ -107,7 +107,7 @@ public class HardwareNode : Node
         {
             if (typeNode.SensorType == sensor.SensorType)
             {
-                SensorNode sensorNode = null;
+                SensorNode? sensorNode = null;
                 foreach (Node node in typeNode.Nodes)
                 {
                     if (node is SensorNode n && n.Sensor == sensor)

@@ -112,7 +112,7 @@ public sealed class TypeNode : Node
         Node_IsVisibleChanged(null);
     }
 
-    private void Node_IsVisibleChanged(Node node)
+    private void Node_IsVisibleChanged(Node? node)
     {
         foreach (Node n in Nodes)
         {

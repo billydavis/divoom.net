@@ -14,17 +14,17 @@ namespace pcMonitor;
 
 public class Node {
 
-    private TreeModel treeModel;
-    private Node parent;
+    private TreeModel? treeModel;
+    private Node? parent;
     private NodeCollection nodes;
-    
+
     private string text;
-    private Image image;
+    private Image? image;
     private bool visible;
     private bool expanded;
 
-    private TreeModel RootTreeModel() {
-      Node node = this;
+    private TreeModel? RootTreeModel() {
+      Node? node = this;
       while (node != null) {
         if (node.Model != null)
           return node.Model;
@@ -42,12 +42,12 @@ public class Node {
       this.expanded = true;
     }
 
-    public TreeModel Model {
+    public TreeModel? Model {
       get { return treeModel; }
       set { treeModel = value; }
     }
 
-    public Node Parent {
+    public Node? Parent {
       get { return parent; }
       set {
         if (value != parent) {
@@ -72,7 +72,7 @@ public class Node {
       }
     }
 
-    public Image Image {
+    public Image? Image {
       get { return image; }
       set {
         if (image != value) {
@@ -97,7 +97,7 @@ public class Node {
       set {
         if (value != visible) {
           visible = value;          
-          TreeModel model = RootTreeModel();
+          TreeModel? model = RootTreeModel();
           if (model != null && parent != null) {
             int index = 0;
             for (int i = 0; i < parent.nodes.Count; i++) {
@@ -124,9 +124,9 @@ public class Node {
 
     public delegate void NodeEventHandler(Node node);
 
-    public event NodeEventHandler IsVisibleChanged;
-    public event NodeEventHandler NodeAdded;
-    public event NodeEventHandler NodeRemoved;
+    public event NodeEventHandler? IsVisibleChanged;
+    public event NodeEventHandler? NodeAdded;
+    public event NodeEventHandler? NodeRemoved;
 
     private class NodeCollection : Collection<Node> {
       private Node owner;
@@ -150,7 +150,7 @@ public class Node {
           item.parent = owner;
           base.InsertItem(index, item);
 
-          TreeModel model = owner.RootTreeModel();
+          TreeModel? model = owner.RootTreeModel();
           if (model != null)
             model.OnStructureChanged(owner);
           if (owner.NodeAdded != null)
@@ -163,8 +163,8 @@ public class Node {
         item.parent = null;
         base.RemoveItem(index);
 
-        TreeModel model = owner.RootTreeModel();
-        if (model != null) 
+        TreeModel? model = owner.RootTreeModel();
+        if (model != null)
           model.OnStructureChanged(owner);
         if (owner.NodeRemoved != null)
           owner.NodeRemoved(item);
