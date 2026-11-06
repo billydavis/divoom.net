@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows10.0.26100.0</TargetFramework>
+    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -14,6 +14,8 @@
     <RootNamespace>pcMonitor</RootNamespace>
     <AssemblyName>Divoom.pcMonitor</AssemblyName>
     <SupportedOSPlatformVersion>10.0.26100.0</SupportedOSPlatformVersion>
+    <!-- Aga.Controls.dll (.NET Framework) stores its images with BinaryFormatter, which .NET 9+ removed. -->
+    <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
   </PropertyGroup>
 
   <ItemGroup>
@@ -105,6 +107,7 @@
 
   <ItemGroup>
     <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.4" />
+    <PackageReference Include="System.Runtime.Serialization.Formatters" Version="10.0.14" />
   </ItemGroup>
 
   <ItemGroup>

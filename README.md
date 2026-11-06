@@ -1,7 +1,7 @@
 # divoom.net and pcMonitor
 
 ## Overview
-divoom.net is a .NET 8 project that provides a library for interacting with Divoom devices. This 
+divoom.net is a .NET 10 project that provides a library for interacting with Divoom devices. This 
 library allows developers to control and retrieve information from Divoom devices programmatically.
 
 The repository also contains a PC monitor application that sends PC sensor data to a Divoom device.
@@ -25,7 +25,7 @@ instructions to connect to your Divoom device.
 To use the divoom.net library in your own project, add a reference to the Divoom library and use the classes and methods.
 
 ### Prerequisites
-- .NET 8 SDK
+- .NET 10 SDK
 
 ### Usage
 Here are some simple examples of how to use the library:

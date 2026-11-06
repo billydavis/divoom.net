@@ -1,6 +1,6 @@
 ﻿# Divoom.pcMonitor
 
-Divoom.pcMonitor is a .NET 8 application designed to monitor the temperature sensors, 
+Divoom.pcMonitor is a .NET 10 application designed to monitor the temperature sensors, 
 fan speeds, voltages, load and clock speeds of your computer and send that data to your 
 Divoom device.
 
@@ -34,7 +34,7 @@ software or the use or other dealings in the software.
 
 ## Requirements
 
-- .NET 8 SDK
+- .NET 10 SDK
 - A compatible Divoom device
 
 ## Supported Devices
