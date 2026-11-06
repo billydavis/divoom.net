@@ -12,7 +12,7 @@ public class HardwareTypeImage
 
     public Image GetImage(HardwareType hardwareType)
     {
-        if (_images.TryGetValue(hardwareType, out Image image))
+        if (_images.TryGetValue(hardwareType, out Image? image))
             return image;
 
 

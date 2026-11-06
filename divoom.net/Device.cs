@@ -3,18 +3,18 @@ using System.Text.Json;
 
 namespace Divoom;
 
-public class Device()
+public class Device
 {
     private readonly DeviceInfo _deviceInfo;
     private readonly string _url;
 
-    public Device(string ipAddress) : this()
+    public Device(string ipAddress)
     {
         _deviceInfo = new DeviceInfo { IpAddress = ipAddress };
         _url = $"http://{ipAddress}/post";
     }
 
-    public Device(DeviceInfo deviceInfo) : this()
+    public Device(DeviceInfo deviceInfo)
     {
         _deviceInfo = deviceInfo;
         _url = $"http://{deviceInfo.IpAddress}/post";

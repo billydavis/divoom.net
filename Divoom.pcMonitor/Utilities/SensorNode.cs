@@ -86,7 +86,7 @@ public class SensorNode : Node
             // else
             //     _settings.Remove(id);
 
-            PlotSelectionChanged?.Invoke(this, null);
+            PlotSelectionChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -97,7 +97,7 @@ public class SensorNode : Node
         {
             _plot = value;
             //_settings.SetValue(new Identifier(Sensor.Identifier, "plot").ToString(), value);
-            PlotSelectionChanged?.Invoke(this, null);
+            PlotSelectionChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -221,7 +221,7 @@ public class SensorNode : Node
         }
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj == null)
             return false;

@@ -220,7 +220,7 @@ namespace pcMonitor
 
         }
 
-        private void BackgroundUpdater_DoWork(object sender, DoWorkEventArgs e)
+        private void BackgroundUpdater_DoWork(object? sender, DoWorkEventArgs e)
         {
             _computer.Accept(_updateVisitor);
 

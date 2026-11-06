@@ -35,22 +35,22 @@ public class EmbeddedResources
         return new Bitmap(1, 1);
     }
 
-    public static Icon GetIcon(string name)
+    public static Icon? GetIcon(string name)
     {
         name = "pcMonitor.Resources." + name;
 
-        string[] names =
+        var names =
             Assembly.GetExecutingAssembly().GetManifestResourceNames();
-        for (int i = 0; i < names.Length; i++)
+
+        foreach (var n in names)
         {
-            if (names[i].Replace('\\', '.') == name)
-            {
-                using (Stream stream = Assembly.GetExecutingAssembly().
-                           GetManifestResourceStream(names[i]))
-                {
-                    return new Icon(stream);
-                }
-            }
+            if (n.Replace('\\', '.') != name) continue;
+            using var stream = Assembly.GetExecutingAssembly().
+                GetManifestResourceStream(n);
+
+            if (stream == null) continue;
+
+            return new Icon(stream);
         }
 
         return null;
