@@ -20,27 +20,27 @@ public class Device
         _url = $"http://{deviceInfo.IpAddress}/post";
     }
 
-    public bool Reboot()
+    public async Task<bool> RebootAsync()
     {
         var data = JsonSerializer.Serialize(new { Command = "Device/SysReboot" });
 
-        return CheckCommandResult(SendCommand<CommandResult>(data).Result);
+        return CheckCommandResult(await SendCommand<CommandResult>(data));
     }
 
-    public bool SetBrightness(int level)
+    public async Task<bool> SetBrightnessAsync(int level)
     {
         if(level is < 0 or > 100)
             throw new ArgumentOutOfRangeException(nameof(level), "Brightness level must be between 0 and 100");
-        
+
         var data = JsonSerializer.Serialize(new { Command = "Channel/SetBrightness", Brightness = level });
 
-        return CheckCommandResult(SendCommand<CommandResult>(data).Result);
+        return CheckCommandResult(await SendCommand<CommandResult>(data));
     }
 
-    public DeviceSettings? GetAllSettings()
+    public Task<DeviceSettings?> GetAllSettingsAsync()
     {
         var data = JsonSerializer.Serialize(new { Command = "Channel/GetAllConf" });
-        return SendCommand<DeviceSettings>(data).Result;
+        return SendCommand<DeviceSettings>(data);
     }
 
     private bool CheckCommandResult(ICommandResult? result)

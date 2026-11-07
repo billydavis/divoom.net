@@ -19,6 +19,7 @@ namespace pcMonitor
         private Device? _selectedDevice;
         private int? _selectedScreen;
         private bool _isMonitoring;
+        private bool _isUpdating;
         private NotifyIcon? _trayIcon;
 
         private readonly DivoomPcMonitorUpdate _divoomPcMonitorUpdateCommand;
@@ -72,8 +73,6 @@ namespace pcMonitor
             treeModel.Nodes.Add(_root);
 
             treeView.Model = treeModel;
-
-            backgroundUpdater.DoWork += BackgroundUpdater_DoWork;
         }
 
         private void InitializeTrayIcon()
@@ -211,18 +210,34 @@ namespace pcMonitor
             return null;
         }
 
-        private void Tick(object sender, EventArgs e)
+        private async void Tick(object sender, EventArgs e)
         {
             treeView.Invalidate();
 
-            if (!backgroundUpdater.IsBusy)
-                backgroundUpdater.RunWorkerAsync();
+            // Skip this tick if the previous update (or a slow device) is still running.
+            if (_isUpdating) return;
+            _isUpdating = true;
 
+            try
+            {
+                await UpdateSensorsAndDeviceAsync();
+            }
+            catch (Exception ex)
+            {
+                // async void: an unhandled exception here would crash the app.
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
+            finally
+            {
+                _isUpdating = false;
+            }
         }
 
-        private void BackgroundUpdater_DoWork(object? sender, DoWorkEventArgs e)
+        private async Task UpdateSensorsAndDeviceAsync()
         {
-            _computer.Accept(_updateVisitor);
+            // Reading hardware sensors can be slow, so keep it off the UI thread.
+            // Everything after the await runs back on the UI thread.
+            await Task.Run(() => _computer.Accept(_updateVisitor));
 
             // Attempt to find the sensors if they are not set
             _divoomPcMonitorUpdateCommand.CpuLoadSensorNode ??= FindHardwareNode(HardwareType.Cpu)?.First(SensorType.Load);
@@ -247,9 +262,7 @@ namespace pcMonitor
             // If a device is selected, send the update command
             if (_selectedDevice != null)
             {
-                // TODO this command needs to be put in a background worker, if the
-                // device is not reachable, the application will hang
-                _divoomPcMonitorUpdateCommand.SendToDevice(_selectedDevice, _selectedScreen);
+                await _divoomPcMonitorUpdateCommand.SendToDeviceAsync(_selectedDevice, _selectedScreen);
             }
 
 
