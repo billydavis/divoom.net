@@ -1,7 +1,10 @@
-﻿namespace Divoom.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace Divoom.Models;
 
 public class DeviceSettings : ICommandResult
 {
+    [JsonPropertyName("error_code")]
     public int ErrorCode { get; set; }
 
     public int Brightness { get; set; }

@@ -8,6 +8,13 @@ public class Device
     private readonly DeviceInfo _deviceInfo;
     private readonly string _url;
 
+    /// <summary>
+    /// How long to wait for the device to answer a command. Devices are on the
+    /// local network and normally reply in well under a second, so a short
+    /// timeout lets callers recover quickly when a device goes offline.
+    /// </summary>
+    public TimeSpan RequestTimeout { get; set; } = TimeSpan.FromSeconds(5);
+
     public Device(string ipAddress)
     {
         _deviceInfo = new DeviceInfo { IpAddress = ipAddress };
@@ -112,7 +119,7 @@ public class Device
 
     public async Task<T?> SendCommand<T>(string data)
     {
-        var response = await WebApi.Post(_url, data);
+        var response = await WebApi.Post(_url, data, RequestTimeout);
 
         var result = JsonSerializer.Deserialize<T>(response);
 
