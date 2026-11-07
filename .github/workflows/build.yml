@@ -1,0 +1,26 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    # Divoom.pcMonitor targets Windows (WinForms), so build on a Windows runner.
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore divoom.net.slnx
+
+      # -warnaserror keeps the build at zero warnings.
+      - name: Build
+        run: dotnet build divoom.net.slnx --configuration Release --no-restore -warnaserror
