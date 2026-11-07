@@ -94,7 +94,6 @@
             rAMUseSensorToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator4 = new ToolStripSeparator();
             hDDSensorToolStripMenuItem = new ToolStripMenuItem();
-            backgroundUpdater = new System.ComponentModel.BackgroundWorker();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -721,6 +720,5 @@
         private ToolStripMenuItem sToolStripMenuItem3;
         private ToolStripMenuItem helpToolStripMenuItem;
         private ToolStripMenuItem aboutToolStripMenuItem;
-        private System.ComponentModel.BackgroundWorker backgroundUpdater;
     }
 }

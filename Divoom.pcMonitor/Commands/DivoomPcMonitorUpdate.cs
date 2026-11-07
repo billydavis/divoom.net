@@ -33,7 +33,7 @@ public class DivoomPcMonitorUpdate
     public string HddTemp => HddTempSensorNode?.Value ?? "n/a";
 
 
-    public bool SendToDevice(Device device, int? screen)
+    public async Task<bool> SendToDeviceAsync(Device device, int? screen)
     {
         var command = new PcMonitorCommand
         {
@@ -55,7 +55,7 @@ public class DivoomPcMonitorUpdate
             }
         };
         
-        var result = device.SendCommand<CommandResult>(JsonSerializer.Serialize(command)).Result;
+        var result = await device.SendCommand<CommandResult>(JsonSerializer.Serialize(command));
 
         return result?.ErrorCode == 0;
     }

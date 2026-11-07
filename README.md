@@ -38,10 +38,10 @@ namespace TestApp;
 
 internal class Program
 {
-    static void Main()
+    static async Task Main()
     {
         // Find all Divoom devices on the local network
-        var devices = Service.FindDevices().Result.ToList();
+        var devices = (await Service.FindDevices()).ToList();
         
         Console.WriteLine($"Found {devices.Count()} devices");
         foreach (var d in devices)
@@ -63,21 +63,21 @@ namespace TestApp;
 
 internal class Program
 {
-    static void Main()
+    static async Task Main()
     {
         var deviceInfo = new DeviceInfo { IpAddress = "192.168.1.4" };
         
         var timeBox = new Device(deviceInfo);
         
         // Set brightness to 50%
-        if(timeBox.SetBrightness(50))
+        if (await timeBox.SetBrightnessAsync(50))
             Console.WriteLine("Brightness set successfully");
 
         // Get all settings
-        var settings = timeBox.GetAllSettings();
+        var settings = await timeBox.GetAllSettingsAsync();
 
         // Display the date format
-        Console.WriteLine($"dateFormat: {settings.DateFormat}");
+        Console.WriteLine($"dateFormat: {settings?.DateFormat}");
     }
 }
 ```
