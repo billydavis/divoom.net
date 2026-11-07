@@ -5,13 +5,19 @@ namespace Divoom;
 
 internal class WebApi
 {
+    // One shared client for the whole app. Creating a new HttpClient per request
+    // leaves sockets in TIME_WAIT and can exhaust them when polling every few seconds.
+    // PooledConnectionLifetime makes pooled connections pick up DNS changes.
+    private static readonly HttpClient Client = new(new SocketsHttpHandler
+    {
+        PooledConnectionLifetime = TimeSpan.FromMinutes(5)
+    });
+
     public static async Task<string> Get(string url)
     {
-        using var client = new HttpClient();
-
         try
         {
-            var response = await client.GetAsync(url);
+            using var response = await Client.GetAsync(url);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         }
@@ -23,15 +29,13 @@ internal class WebApi
 
     public static async Task<string> Post(string url, string json)
     {
-        using var client = new HttpClient();
-        
-        var content = (!string.IsNullOrEmpty(json)) 
-            ? new StringContent(json, Encoding.UTF8, "application/json") 
+        using var content = (!string.IsNullOrEmpty(json))
+            ? new StringContent(json, Encoding.UTF8, "application/json")
             : null;
 
         try
         {
-            var response = await client.PostAsync(url, content);
+            using var response = await Client.PostAsync(url, content);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         }
@@ -39,6 +43,5 @@ internal class WebApi
         {
             return ex.ToJson();
         }
-        
-    }   
+    }
 }
