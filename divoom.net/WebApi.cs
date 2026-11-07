@@ -13,13 +13,20 @@ internal class WebApi
         PooledConnectionLifetime = TimeSpan.FromMinutes(5)
     });
 
-    public static async Task<string> Get(string url)
+    /// <param name="timeout">Per-request timeout; null uses HttpClient's default (100 s).</param>
+    public static async Task<string> Get(string url, TimeSpan? timeout = null)
     {
+        using var cts = CreateTimeout(timeout);
+
         try
         {
-            using var response = await Client.GetAsync(url);
+            using var response = await Client.GetAsync(url, cts.Token);
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadAsStringAsync();
+            return await response.Content.ReadAsStringAsync(cts.Token);
+        }
+        catch (OperationCanceledException) when (cts.IsCancellationRequested)
+        {
+            return TimeoutError(url, timeout).ToJson();
         }
         catch (Exception ex)
         {
@@ -27,21 +34,34 @@ internal class WebApi
         }
     }
 
-    public static async Task<string> Post(string url, string json)
+    /// <param name="timeout">Per-request timeout; null uses HttpClient's default (100 s).</param>
+    public static async Task<string> Post(string url, string json, TimeSpan? timeout = null)
     {
         using var content = (!string.IsNullOrEmpty(json))
             ? new StringContent(json, Encoding.UTF8, "application/json")
             : null;
 
+        using var cts = CreateTimeout(timeout);
+
         try
         {
-            using var response = await Client.PostAsync(url, content);
+            using var response = await Client.PostAsync(url, content, cts.Token);
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadAsStringAsync();
+            return await response.Content.ReadAsStringAsync(cts.Token);
+        }
+        catch (OperationCanceledException) when (cts.IsCancellationRequested)
+        {
+            return TimeoutError(url, timeout).ToJson();
         }
         catch (Exception ex)
         {
             return ex.ToJson();
         }
     }
+
+    private static CancellationTokenSource CreateTimeout(TimeSpan? timeout) =>
+        timeout is { } t ? new CancellationTokenSource(t) : new CancellationTokenSource();
+
+    private static TimeoutException TimeoutError(string url, TimeSpan? timeout) =>
+        new($"No response from {url} within {timeout?.TotalSeconds:0.#} seconds.");
 }
